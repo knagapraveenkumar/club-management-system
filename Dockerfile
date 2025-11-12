@@ -1,14 +1,18 @@
-# Use Java 17 as base image
-FROM openjdk:17-jdk-slim
+# Use Java 17 base image
+FROM eclipse-temurin:17-jdk
 
 # Set working directory
 WORKDIR /app
 
-# Copy your JAR file from target folder into the container
-COPY target/clubmanagement-0.0.1-SNAPSHOT.jar app.jar
+# Copy Maven build files
+COPY pom.xml .
+COPY src ./src
 
-# Expose the port your app runs on
+# Package the application (skip tests for faster builds)
+RUN ./mvnw clean package -DskipTests || mvn clean package -DskipTests
+
+# Expose port
 EXPOSE 8080
 
-# Command to run your application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the jar file
+CMD ["java", "-jar", "target/clubmanagement-0.0.1-SNAPSHOT.jar"]
