@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard - Club Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .club-section {
+            background-color: #ffffff;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 5px;
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            padding: 8px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #357ab8;
+        }
+
+        .event-list {
+            margin-top: 15px;
+        }
+
+        .event-item {
+            background-color: #eef3f8;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4a90e2;
+        }
+
+        .delete-form {
+            display: inline;
+            margin-left: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>Admin Dashboard - Club Management System</header>
+
+<div class="container">
+    <div class="club-section" th:each="club : ${clubs}">
+        <h2 th:text="${club.name}">Club Name</h2>
+        <p th:text="${club.description}">Club Description</p>
+
+        <!-- Add Event Form -->
+        <form th:action="@{/admin/event/add}" method="post">
+            <input type="hidden" name="clubId" th:value="${club.id}">
+            <input type="text" name="name" placeholder="Event Name" required>
+            <input type="date" name="date" required>
+            <input type="text" name="description" placeholder="Description" required>
+            <select name="status" required>
+                <option value="">Select Status</option>
+                <option value="Upcoming">Upcoming</option>
+                <option value="Completed">Completed</option>
+            </select>
+            <button type="submit">Add Event</button>
+        </form>
+
+        <!-- Show Events -->
+        <div class="event-list">
+            <div class="event-item" th:each="event : ${club.events}">
+                <strong th:text="${event.name}">Event Name</strong> |
+                <span th:text="${event.date}">Date</span> |
+                <span th:text="${event.description}">Description</span> |
+                <span th:text="${event.status}">Status</span>
+                <form th:action="@{/admin/event/edit}" method="get" style="display:inline;">
+            		<input type="hidden" name="eventId" th:value="${event.id}" />
+            		<button type="submit">Edit</button>
+                </form>
+                <form th:action="@{'/admin/event/delete/' + ${event.id}}" method="post" class="delete-form">
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+        </div>   
+
+        <!-- Delete Club Button -->
+        <form th:action="@{'/admin/club/delete/' + ${club.id}}" method="post">
+            <button type="submit">Delete Club</button>
+        </form>
+        
+    </div>
+    
+    <div class="container">
+
+    <!-- Link to View Event Registrations -->
+    <div style="margin-bottom: 20px;">
+        <a href="/admin/events/registrations" 
+           style="font-weight: bold; color: #4a90e2; text-decoration: none;">
+           📋 View Event Registrations
+        </a>
+    </div>
+
+    <!-- Add New Club Form -->
+    <div class="club-section">
+        <h2>Add New Club</h2>
+        <form th:action="@{/admin/club/add}" method="post">
+            <input type="text" name="name" placeholder="Club Name" required>
+            <input type="text" name="description" placeholder="Description" required>
+            <button type="submit">Add Club</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

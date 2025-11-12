@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Login</title>
+</head>
+<body>
+    <h2>Admin Login</h2>
+    <form method="post" th:action="@{/auth/login}">
+        <input type="hidden" name="role" value="ADMIN"/>
+        Email: <input type="email" name="email" required/><br/>
+        Password: <input type="password" name="password" required/><br/>
+        <button type="submit">Login</button>
+    </form>
+    <p th:text="${error}"></p>
+</body>
+</html>

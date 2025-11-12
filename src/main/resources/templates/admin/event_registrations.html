@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Event Registrations</title>
+</head>
+<body>
+    <h2>Event Registrations</h2>
+
+    <div th:each="event : ${events}">
+        <!-- Event name, date, and club name -->
+        <h3 th:text="${event.name + ' (' + event.date.toString() + ') - ' + event.club.name}"></h3>
+        
+
+        <!-- No registrations -->
+        <p th:if="${#lists.isEmpty(event.registeredUsers)}">No users registered for this event.</p>
+
+        <!-- List of registered users -->
+        <ul th:if="${!#lists.isEmpty(event.registeredUsers)}">
+            <li th:each="user : ${event.registeredUsers}">
+                <span th:text="${user.name}"></span> - <span th:text="${user.email}"></span>
+            </li>
+        </ul>
+        <hr/>
+    </div>
+</body>
+</html>
