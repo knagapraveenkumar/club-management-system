@@ -52,7 +52,7 @@
         <p><strong>Status:</strong> <span th:text="${event.status}">Event Status</span></p>
 
         <!-- Only show register button if event is upcoming -->
-        <div th:if="${event.status == 'Upcoming'}">
+        <div th:if="${event.status == 'UPCOMING'}">
             <form th:action="@{/user/events/register}" method="post">
                 <!-- No need for userId if it's taken from session -->
                 <input type="hidden" th:name="eventId" th:value="${event.id}"/>
@@ -61,7 +61,7 @@
         </div>
 
         <!-- Message if event is completed -->
-        <div th:if="${event.status == 'Completed'}">
+        <div th:if="${event.status == 'COMPLETED'}">
             <p style="color: gray; font-style: italic;">Registration closed (Event Completed)</p>
         </div>
     </div>

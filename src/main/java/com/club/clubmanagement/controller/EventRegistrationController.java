@@ -1,3 +1,48 @@
+//package com.club.clubmanagement.controller;
+//
+//import com.club.clubmanagement.model.Event;
+//import com.club.clubmanagement.model.EventRegistration;
+//import com.club.clubmanagement.model.User;
+//import com.club.clubmanagement.repository.EventRegistrationRepository;
+//import com.club.clubmanagement.repository.EventRepository;
+//import com.club.clubmanagement.repository.UserRepository;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.web.bind.annotation.*;
+//
+//import java.time.LocalDateTime;
+//
+//@RestController
+//@RequestMapping("/api/registrations")
+//@CrossOrigin(origins = "*")
+//public class EventRegistrationController {
+//
+//    @Autowired
+//    private EventRegistrationRepository registrationRepository;
+//
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    @Autowired
+//    private EventRepository eventRepository;
+//
+//    // Register for an event
+//    @PostMapping
+//    public String registerForEvent(@RequestParam Long userId, @RequestParam Long eventId) {
+//        User user = userRepository.findById(userId).orElse(null);
+//        Event event = eventRepository.findById(eventId).orElse(null);
+//
+//        if (user == null || event == null) return "User or Event not found.";
+//
+//        EventRegistration registration = new EventRegistration();
+//        registration.setUser(user);
+//        registration.setEvent(event);
+//        registration.setRegisteredAt(LocalDateTime.now());
+//
+//        registrationRepository.save(registration);
+//        return "Successfully registered for event!";
+//    }
+//}
+
 package com.club.clubmanagement.controller;
 
 import com.club.clubmanagement.model.Event;
@@ -27,11 +72,28 @@ public class EventRegistrationController {
 
     // Register for an event
     @PostMapping
-    public String registerForEvent(@RequestParam Long userId, @RequestParam Long eventId) {
+    public String registerForEvent(@RequestParam Long userId,
+                                   @RequestParam Long eventId) {
+
         User user = userRepository.findById(userId).orElse(null);
         Event event = eventRepository.findById(eventId).orElse(null);
 
-        if (user == null || event == null) return "User or Event not found.";
+        if (user == null || event == null) {
+            return "User or Event not found.";
+        }
+
+        // 🚫 BLOCK COMPLETED EVENTS
+        if ("COMPLETED".equals(event.getStatus())) {
+            return "Registration closed. Event already completed.";
+        }
+
+        // 🚫 PREVENT DUPLICATE REGISTRATION
+        boolean alreadyRegistered =
+                registrationRepository.existsByUserIdAndEventId(userId, eventId);
+
+        if (alreadyRegistered) {
+            return "You are already registered for this event.";
+        }
 
         EventRegistration registration = new EventRegistration();
         registration.setUser(user);
@@ -39,6 +101,7 @@ public class EventRegistrationController {
         registration.setRegisteredAt(LocalDateTime.now());
 
         registrationRepository.save(registration);
+
         return "Successfully registered for event!";
     }
 }

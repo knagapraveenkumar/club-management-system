@@ -15,13 +15,13 @@ public class User {
     private String password;
     private String role; // "USER" or "ADMIN"
 
-    @ManyToMany
-    @JoinTable(
-        name = "user_event_registration",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "event_id")
-    )
-    private List<Event> registeredEvents = new ArrayList<>();
+	/*
+	 * @ManyToMany
+	 * 
+	 * @JoinTable( name = "user_event_registration", joinColumns = @JoinColumn(name
+	 * = "user_id"), inverseJoinColumns = @JoinColumn(name = "event_id") ) private
+	 * List<Event> registeredEvents = new ArrayList<>();
+	 */
 
     // Getters and setters
     public Long getId() {
@@ -64,11 +64,10 @@ public class User {
         this.role = role;
     }
 
-    public List<Event> getRegisteredEvents() {
-        return registeredEvents;
-    }
-
-    public void setRegisteredEvents(List<Event> registeredEvents) {
-        this.registeredEvents = registeredEvents;
-    }
+	/*
+	 * public List<Event> getRegisteredEvents() { return registeredEvents; }
+	 * 
+	 * public void setRegisteredEvents(List<Event> registeredEvents) {
+	 * this.registeredEvents = registeredEvents; }
+	 */
 }
