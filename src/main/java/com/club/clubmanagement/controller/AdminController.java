@@ -11,6 +11,7 @@ import com.club.clubmanagement.model.Club;
 import com.club.clubmanagement.model.Event;
 import com.club.clubmanagement.service.ClubService;
 import com.club.clubmanagement.service.EventService;
+import com.club.clubmanagement.service.EventRegistrationService;
 
 
 @Controller
@@ -19,9 +20,13 @@ public class AdminController {
 
     @Autowired
     private ClubService clubService;
+    
+    @Autowired
+    private EventRegistrationService eventRegistrationService;
 
     @Autowired
     private EventService eventService;
+    
 
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
@@ -29,11 +34,20 @@ public class AdminController {
         return "admin/dashboard"; // HTML page
     }
     
+	/*
+	 * @GetMapping("/events/registrations") public String
+	 * viewEventRegistrations(Model model) { List<Event> events =
+	 * eventService.getAllEvents(); // You already have this in EventService
+	 * model.addAttribute("events", events); return "admin/event_registrations"; //
+	 * We'll create this HTML file }
+	 */
     @GetMapping("/events/registrations")
     public String viewEventRegistrations(Model model) {
-        List<Event> events = eventService.getAllEvents(); // You already have this in EventService
-        model.addAttribute("events", events);
-        return "admin/event_registrations"; // We'll create this HTML file
+
+        model.addAttribute("registrations",
+                eventRegistrationService.getAllRegistrations());
+
+        return "admin/event_registrations";
     }
     
     @GetMapping("/event/edit")
